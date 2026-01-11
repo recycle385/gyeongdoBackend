@@ -14,12 +14,10 @@ export class GameGateway {
 
   constructor(private readonly redisService: RedisService) {}
 
-  @SubscribeMessage('move') // 플러터에서 'move'로 데이터를 보내면 실행
+  @SubscribeMessage('move')
   async handleMove(@MessageBody() data: any) {
-    // 1. Redis에 위치 정보 저장
     await this.redisService.set(`player:${data.id}`, data);
 
-    // 2. 다른 모든 유저에게 위치 전송 (실시간 중계)
     this.server.emit('updateLocation', data);
   }
 }

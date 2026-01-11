@@ -12,10 +12,9 @@ import { GameModule } from './modules/game/game.module';
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration],
-      validate, // ⭐️ [핵심] 이걸 넣어야 서버 켜질 때 환경변수를 검사합니다!
+      validate,
     }),
 
-    // ⭐️ [보안] 레이트 리미터 추가 (1분에 100회 요청 제한)
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -31,7 +30,6 @@ import { GameModule } from './modules/game/game.module';
     GameModule,
   ],
   providers: [
-    // ⭐️ [보안] 모든 API에 레이트 리미터 적용
     {
       provide: APP_GUARD,
       useClass: ThrottlerGuard,
